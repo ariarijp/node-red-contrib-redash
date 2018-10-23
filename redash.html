@@ -1,0 +1,84 @@
+<script type="text/javascript">
+  RED.nodes.registerType("redash", {
+    category: "function",
+    color: "#ff7964",
+    defaults: {
+      name: { value: "" },
+      end_point: { value: "", required: true },
+      api_token: { value: "", required: true },
+      data_source_id: { value: "", required: true },
+      query: { value: "", required: true },
+      timeout: { value: "60", required: true }
+    },
+    inputs: 1,
+    outputs: 1,
+    label: function () {
+      return this.name || "redash";
+    },
+    oneditprepare: function () {
+      var that = this;
+      this.editor = RED.editor.createEditor({
+        id: "node-input-query-editor",
+        mode: "ace/mode/sql",
+        value: $("#node-input-query").val()
+      });
+      this.editor.focus();
+    },
+    oneditsave: function () {
+      $("#node-input-query").val(this.editor.getValue());
+      this.editor.destroy();
+      delete this.editor;
+    },
+    oneditcancel: function () {
+      this.editor.destroy();
+      delete this.editor;
+    },
+    oneditresize: function (size) {
+      var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+      var height = $("#dialog-form").height();
+      for (var i = 0; i < rows.size(); i++) {
+        height -= $(rows[i]).outerHeight(true);
+      }
+      var editorRow = $("#dialog-form>div.node-text-editor-row");
+      height -=
+        parseInt(editorRow.css("marginTop")) +
+        parseInt(editorRow.css("marginBottom"));
+      $(".node-text-editor").css("height", height + "px");
+      this.editor.resize();
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="redash">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-end_point"><i class="fa fa-link"></i> End Point</label>
+    <input type="url" id="node-input-end_point" placeholder="http://localhost:8080/" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-api_token"><i class="fa fa-key"></i> API Token</label>
+    <input type="text" id="node-input-api_token" placeholder="API Token" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-data_source_id"><i class="fa fa-database"></i> Data Source ID</label>
+    <input type="number" id="node-input-data_source_id" placeholder="42" />
+  </div>
+  <div class="form-row" style="margin-bottom: 0px;">
+    <label for="node-input-query" style="width: 100% !important;"><i class="fa fa-asterisk"></i> Query</label>
+    <input type="hidden" id="node-input-query" autofocus="autofocus" />
+  </div>
+  <div class="form-row node-text-editor-row">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-query-editor"></div>
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout"><i class="fa fa-hourglass"></i> Timeout (seconds)</label>
+    <input type="number" id="node-input-timeout" placeholder="60" />
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="redash">
+  <p>Node-RED Node for Redash.</p>
+</script>

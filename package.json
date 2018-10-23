@@ -1,0 +1,22 @@
+{
+  "name": "node-red-contrib-redash",
+  "version": "0.1.0",
+  "description": "Node-RED Node for Redash.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ariarijp/node-red-contrib-redash.git"
+  },
+  "keywords": [
+    "redash"
+  ],
+  "author": "Takuya Arita <takuya.arita@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "redash-client": "^1.1.2"
+  },
+  "node-red": {
+    "nodes": {
+      "redash": "redash.js"
+    }
+  }
+}
