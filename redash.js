@@ -6,18 +6,19 @@ module.exports = function(RED) {
     var node = this;
 
     const redash = new RedashClient({
-      endPoint: config.end_point,
-      apiToken: config.api_token
+      endPoint: msg.end_point || config.end_point,
+      apiToken: msg.api_token || config.api_token
     });
+    const timeout = (msg.timeout || config.timeout) * 1000;
 
     node.on("input", function(msg) {
       const params = {
-        query: config.query,
-        data_source_id: config.data_source_id
+        query: msg.query || config.query,
+        data_source_id: msg.data_source_id || config.data_source_id
       };
 
       redash
-        .queryAndWaitResult(params, config.timeout * 1000)
+        .queryAndWaitResult(params, timeout)
         .then(resp => {
           const data = resp.query_result.data;
           data.rows.forEach(row => {
